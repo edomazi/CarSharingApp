@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+utils/__pycache__/
+DatabaseStatements/__pycache__/
+calls/__pycache__/
+.idea
