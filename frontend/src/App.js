@@ -7,7 +7,7 @@ import Dashboard from './components/Dashboard.js'
 import {UIStore} from "../store/store";
 import Profile from "./components/Profile";
 import Payment from "./components/Payment";
-import Admin from "./components/Admin";
+
 
 const App = () => {
   const isLoggedin = UIStore.useState(s => s.isLoggedin);
@@ -16,7 +16,6 @@ const App = () => {
     <Router>
       <Switch>
         <Route path="/signin" exact component={SignIn}/>
-        <Route path="/admin" exact component={Admin}/>
         <Route path="/signup" exact component={SignUp}/>
         <Route path="/profile" exact component={Profile}/>
         <Route path="/payment" exact component={Payment}/>

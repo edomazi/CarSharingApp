@@ -85,7 +85,12 @@ InsertReview = 'INSERT INTO trips_reviews (driver_id, review_by, trip_id, review
 
 SelectUserStars = 'SELECT rating from trips_reviews WHERE driver_id = %s'
 
-SelectDriverReviews = 'SELECT review from trips_reviews WHERE driver_id = %s'
+SelectDriverReviews = 'SELECT trips_reviews.review, users.first_name, users.last_name from trips_reviews INNER JOIN ' \
+                      'users ON trips_reviews.review_by = users.id WHERE driver_id = %s'
+
+SelectDriverReviewsStarsAndUser = 'SELECT trips_reviews.rating, trips_reviews.review, users.first_name, users.last_name ' \
+                                  'FROM trips_reviews INNER JOIN users ON trips_reviews.review_by = users.id ' \
+                                  'WHERE trips_reviews.driver_id = %s'
 
 DoPayment = 'UPDATE booked_trips SET paid = 1 WHERE trip_id = %s AND user_id = %s'
 

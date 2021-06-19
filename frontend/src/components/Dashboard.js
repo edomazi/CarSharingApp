@@ -133,8 +133,9 @@ const Dashboard = () => {
   function formDate(msValue) {
     const date = new Date(msValue)
     const month = date.toLocaleString('default', { month: 'short' });
-
-    return `${date.getDate()} ${month} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+    const hours = date.getHours() > 9 ? date.getHours() : '0' + date.getHours();
+    const minutes = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes();
+    return `${date.getDate()} ${month} ${date.getFullYear()} ${hours}:${minutes}`
   }
 
   const buttonDeleteBooking = (aTripId) => (e) => {
@@ -479,15 +480,15 @@ const Dashboard = () => {
                                   <h3 className="price-text">{formDate(value.date)}</h3>
                                   {!value.driver ?
                                     <button className="btn btn-outline-primary rounded mt-1" type="button"
-                                            data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
-                                            aria-controls="collapseOne">
+                                            data-toggle="collapse" data-target={`#collapse_${value.date}`} aria-expanded="true"
+                                            aria-controls={`collapse_${value.date}`}>
                                       Add review
                                     </button> : '' }
                                 </div>
                               </div>
                               {!value.driver ?
                                 <div className="accordion mt-3"  id="accordionExample">
-                                  <div id="collapseOne" className="collapse border rounded shadow-sm" aria-labelledby="headingOne"
+                                  <div id={`collapse_${value.date}`} className="collapse border rounded shadow-sm" aria-labelledby="headingOne"
                                        data-parent="#accordionExample">
                                     <div className="card-body">
                                       Please type a few words to tell everyone how the trip with <i className='font-weight-bold'>{value.driverName}</i> was

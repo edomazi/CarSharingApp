@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from flask import jsonify, request
 
-from DatabaseStatements.DBQueries import SelectUserById, SelectCarInfos, SelectUserStars, SelectDriverReviews
+from DatabaseStatements.DBQueries import SelectUserById, SelectCarInfos, SelectUserStars, SelectDriverReviewsStarsAndUser
 from utils.DBConnection import DBConnection
 
 
@@ -20,17 +20,19 @@ class GetDriverInfo(Resource):
 
             rating = con.execute_query_params(SelectUserStars, (driver_id,))
 
-            reviews = con.execute_query_params(SelectDriverReviews, (driver_id,))
+            reviews = con.execute_query_params(SelectDriverReviewsStarsAndUser, (driver_id,))
 
             total_stars = 0
-            if len(rating):
-                for star in rating:
-                    total_stars += star[0]
-
             reviews_array = []
+
             if len(reviews):
-                for review in reviews:
-                    reviews_array.append(review)
+                for item in reviews:
+                    total_stars += item[0]
+                    temp = dict({
+                        "review": item[1],
+                        "review_by": item[2] + " " + item[3]
+                    })
+                    reviews_array.append(temp)
 
             stars = 0
             if len(rating) != 0:

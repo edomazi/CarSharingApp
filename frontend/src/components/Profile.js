@@ -21,6 +21,7 @@ const Profile = () => {
     isDriver: '',
     driverLicenseNumber: '',
     stars: 0,
+    reviews: [],
   });
   let [updatedUser, setUpdatedUser] = useState({
     id: '',
@@ -35,6 +36,7 @@ const Profile = () => {
     isDriver: '',
     driverLicenseNumber: '',
     stars: 0,
+    reviews: [],
   });
   let [car, setCar] = useState({
     id: '',
@@ -64,6 +66,7 @@ const Profile = () => {
   let [disableAddNewTrip, setDisableAddNewTrip] = useState(true)
   let [showSuccessMessage, setShowSuccessMessage] = useState('')
   let [showErrorMessage, setShowErrorMessage] = useState('')
+  let [urlHash, setUrlHash] = useState('')
 
   const reactStarsConfig = {
     size: 20,
@@ -108,6 +111,7 @@ const Profile = () => {
   }, [showSuccessMessage])
 
   useEffect( () => {
+    setUrlHash(window.location.hash.substring(1));
     if (!localStorage.getItem('token')) {
       window.location.href = "/signin";
     } else {
@@ -123,6 +127,7 @@ const Profile = () => {
         setLoading(true);
         const response = await axios.post('http://localhost:5000/profile', form, {headers: MyHeaders});
         if (response.data.ok) {
+          console.log(response.data.user)
           setUser(response.data.user);
           setUpdatedUser(response.data.user);
         }
@@ -316,6 +321,24 @@ const Profile = () => {
 
     updateUserInfo();
   };
+  const activeTabTrip = () => {
+    if (urlHash === 'trip') {
+        return 'show active';
+    }
+    return '';
+  }
+  const activeTabDriver = () => {
+    if (urlHash === 'driver') {
+      return 'show active';
+    }
+    return '';
+  }
+  const activeTabInfos = () => {
+    if (urlHash !== 'driver' && urlHash !== 'trip') {
+      return 'show active';
+    }
+    return '';
+  }
 
   const updateUserInfo = aParam => (e) => {
     e.preventDefault();
@@ -500,11 +523,12 @@ const Profile = () => {
                       }
                       <ul className="nav nav-tabs" id="myTab" role="tablist">
                         <li className="nav-item">
-                          <a className="nav-link active text-dark" id="info-tab" data-toggle="tab" href="#info" role="tab"
+                          <a className={urlHash !== 'driver' && urlHash !== 'trip' ? 'nav-link text-dark active': 'nav-link text-dark'}
+                             id="info-tab" data-toggle="tab" href="#info" role="tab"
                              aria-controls="info" aria-selected="true">Profile Info</a>
                         </li>
                         <li className="nav-item">
-                          <a className="nav-link text-dark" id="driver-tab" data-toggle="tab" href="#driver" role="tab"
+                          <a className={urlHash === 'driver' ? 'nav-link text-dark active' : 'nav-link text-dark' } id="driver-tab" data-toggle="tab" href="#driver" role="tab"
                              aria-controls="driver" aria-selected="false">
                             {!user.isDriver && 'Become a driver'}
                             {user.isDriver && 'Driver infos' || ''}
@@ -512,16 +536,26 @@ const Profile = () => {
                         </li>
                         {user.isDriver ?
                           <li className="nav-item">
-                          <a className="nav-link text-dark" id="trip-tab" data-toggle="tab" href="#trip" role="tab"
+                          <a className={urlHash === 'trip' ? 'nav-link text-dark active' : 'nav-link text-dark'}  id="trip-tab" data-toggle="tab" href="#trip" role="tab"
                              aria-controls="trip" aria-selected="false">Start a new trip</a>
                         </li>
                         : ''}
+                        {user.reviews.length ?
+                          <li className="nav-item">
+                            <a className='nav-link text-dark'  id="reviews-tab" data-toggle="tab" href="#reviews" role="tab"
+                               aria-controls="reviews" aria-selected="false">Reviews
+                                <span className='badge bg-dark text-white ml-2'>
+                                  {user.reviews.length}
+                                </span>
+                            </a>
+                          </li>
+                          : ''}
                       </ul>
                       <div className="tab-content ml-2 mt-3" id="myTabContent">
-                        <div className="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+                        <div className={'tab-pane fade ' + activeTabInfos()} id="info" role="tabpanel" aria-labelledby="info-tab">
                           <div className="row">
                             <div className="col-sm-3 col-md-2 col-5">
-                              <label className="font-weight-bold">Full Name</label>
+                              <label className="font-weight-bold">Full Name *</label>
                             </div>
                             <div className="col-md-8 col-6">
                               {user.fullName}
@@ -542,7 +576,7 @@ const Profile = () => {
 
                           <div className="row">
                             <div className="col-sm-3 col-md-2 col-5">
-                              <label className={"font-weight-bold"}>Email</label>
+                              <label className={"font-weight-bold"}>Email *</label>
                             </div>
                             <div className="col-md-8 col-6">
                               {user.email}
@@ -579,9 +613,10 @@ const Profile = () => {
                               {user.driverLicenseNumber}
                             </div>
                           </div>
+                          <p className='mt-2 font-italic'>* Mandatory fields to be able to book a trip!</p>
 
                         </div>
-                        <div className="tab-pane fade" id="driver" role="tabpanel" aria-labelledby="driver-tab">
+                        <div className={'tab-pane fade ' + activeTabDriver()} id="driver" role="tabpanel" aria-labelledby="driver-tab">
                           <div className="custom-control custom-switch">
                             <input onChange={displayModal}
                                    type="checkbox"
@@ -679,7 +714,7 @@ const Profile = () => {
                           </> || ''
                           }
                         </div>
-                        <div className="tab-pane fade mb-5" id="trip" role="tabpanel" aria-labelledby="contact-tab">
+                        <div className={'tab-pane fade ' + activeTabTrip()} id="trip" role="tabpanel" aria-labelledby="contact-tab">
                           <p className='mb-4'>Fill out the following information to add a new trip!</p>
                           {!user.age || !user.country.length || !user.city.length || !user.phoneNumber.length
                             || !user.driverLicenseNumber.length || !car.manufacturer.length || !car.color.length || !car.model.length ?
@@ -725,6 +760,20 @@ const Profile = () => {
                               Add Trip
                             </button>
                           </form>
+                        </div>
+
+                        <div className={'tab-pane fade'} id="reviews" role="tabpanel" aria-labelledby="contact-tab">
+                          { user.reviews.map((item, index) => {
+                            return <>
+                              <p key={index} className='ml-3'>
+                                <span className='mr-3'>{index + 1}.</span>
+                                <span className='font-weight-bold'>
+                                  &ldquo;{item.review}&rdquo;
+                                </span>
+                                - <i>{item.review_by}</i></p>
+                              <hr/>
+                            </>
+                          })}
                         </div>
                       </div>
                     </div>

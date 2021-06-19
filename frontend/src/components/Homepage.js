@@ -45,7 +45,7 @@ const Homepage = () => {
   const SearchTrips = (e) => {
     e.preventDefault();
     let formData = new FormData();
-    const nextDayFromDate = new Date().setDate(new Date(date).getDate() + 1);
+
 
     // if searching date is today send new Date() to backend so the hrs aren't off
     const userDate = new Date(date);
@@ -60,7 +60,7 @@ const Homepage = () => {
     formData.append('from', from);
     formData.append('to', to);
     formData.append('dateToday', dateToUse);
-    formData.append('dateTomorrow', nextDayFromDate);
+
     const searchTrip = async () => {
       setUserDidSearch(true);
       setLoading(true);
@@ -85,8 +85,10 @@ const Homepage = () => {
   function formDate(msValue) {
     const date = new Date(msValue)
     const month = date.toLocaleString('default', { month: 'short' });
+    const hours = date.getHours() > 9 ? date.getHours() : '0' + date.getHours();
+    const minutes = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes();
 
-    return `${date.getDate()} ${month} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+    return `${date.getDate()} ${month} ${date.getFullYear()} ${hours}:${minutes}`
   }
   function computeMinDate() {
     const date = new Date()
@@ -276,13 +278,17 @@ const Homepage = () => {
                                 </div>
                                 {driverInfos.reviews.length ?
                                   <div className='py-2'>
-                                    <details>
+                                    <details style={{maxHeight: '300px', overflow: 'auto'}}>
                                       <summary>
                                         Reviews <span className='badge bg-dark text-white'>{driverInfos.reviews.length}</span>
                                       </summary>
                                       { driverInfos.reviews.map((item, index) => {
-                                        return <p key={index} className='ml-3'> <i>&ldquo;{item}&rdquo;</i> </p>
-                                      })}
+                                        return <>
+                                          <p key={index} className='ml-3'> <span className='font-weight-bold'>&ldquo;{item.review}&rdquo;</span>
+                                                  - <i>{item.review_by}</i></p>
+                                                <hr/>
+                                              </>
+                                        })}
                                     </details>
                                   </div> : ''
                                 }

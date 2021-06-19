@@ -12,11 +12,10 @@ class SearchTrips(Resource):
         from_where = data_form.get('from')
         to_where = data_form.get('to')
         dateToday = data_form.get('dateToday')
-        dateTomorrow = data_form.get('dateTomorrow')
 
         try:
             con = DBConnection()
-            total_trips = con.execute_query_params(SearchForTrips, (from_where, to_where, dateToday, dateTomorrow))
+            total_trips = con.execute_query_params(SearchForTrips, (from_where, to_where, dateToday, int(dateToday) + 86400000))
 
             if len(total_trips) > 0:
                 trips = []
