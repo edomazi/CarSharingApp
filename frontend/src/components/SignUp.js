@@ -5,6 +5,7 @@ import axios from 'axios';
 const SignUp = () => {
   let [fieldsIncompleteFields, setIncompleteFields] = useState(true);
   let [errorAtSignUp, setErrorAtSignUp] = useState('')
+  let [successAtSignUp, setSuccessAtSignUp] = useState('')
   let [signUpFields, setSignUpFields] = useState({
     firstName: '',
     lastName: '',
@@ -41,10 +42,14 @@ const SignUp = () => {
     axios.post('http://localhost:5000/signup', formData, {headers: MyHeaders})
       .then(res => {
         if (res.data.ok) {
-          setErrorAtSignUp(res.data.message);
+          setSuccessAtSignUp(res.data.message);
         } else {
           setErrorAtSignUp(res.data.message);
         }
+        setTimeout(() => {
+          setSuccessAtSignUp('');
+          setErrorAtSignUp('');
+        }, 3000);
       }).catch(() => setErrorAtSignUp('Something went wrong!'));
   }
   const updateSignUpFields = (aCategory) => (e) => {
@@ -66,6 +71,11 @@ const SignUp = () => {
           {errorAtSignUp.length ?
             <div className="alert alert-danger" role="alert">
               {errorAtSignUp}
+            </div> : ''
+          }
+          {successAtSignUp.length ?
+            <div className="alert alert-success" role="alert">
+              {successAtSignUp}
             </div> : ''
           }
           <form onSubmit={performSignUp}>
@@ -102,7 +112,7 @@ const SignUp = () => {
               <small className='text-danger mt-3 mb-3'>
                 { signUpFields.password.length > 1 && signUpFields.password.length < 8 && signUpFields.confirmPassword.length < 8
                  || signUpFields.password !== signUpFields.confirmPassword
-                  ? "Passwords don't match and must have at least 8 characters" : '' }
+                  ? "Passwords don't match and must have at least 8 characters and a letter" : '' }
               </small>
             </div>
             <button type="submit"

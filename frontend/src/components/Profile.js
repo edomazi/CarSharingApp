@@ -153,6 +153,7 @@ const Profile = () => {
   const performActionButton = (e) => {
     e.preventDefault();
     setUser({
+      ...user,
       isDriver: 1
     })
 
@@ -166,6 +167,9 @@ const Profile = () => {
       .then(response => {
         if (response.data.ok) {
           setShowSuccessMessage(response.data.message)
+          setTimeout(() => {
+            window.location.href = "/profile#driver";
+          }, 2000)
         } else {
           setShowErrorMessage(response.data.message)
         }

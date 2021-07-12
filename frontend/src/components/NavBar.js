@@ -18,7 +18,10 @@ const NavBar = () => {
 
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav">
-          <Link to="/" className="navbar-brand p-3">Home</Link>
+          <Link to="/" className="navbar-brand p-3">
+            <img src={process.env.PUBLIC_URL + '/pictures/icon.png'} alt='logo' className={'img-fluid mt-2'}/>
+            <h4>Carrental</h4>
+          </Link>
         </ul>
         <ul className="navbar-nav ml-auto">
           { isLoggedin &&
@@ -30,8 +33,8 @@ const NavBar = () => {
             }
           {!isLoggedin &&
             <>
-              <Link to="/signin" className="navbar-brand p-3">Signin</Link>
-              <Link to="/signup" className="navbar-brand p-3">Signup</Link>
+              <Link to="/signin" className="navbar-brand p-3">Sign in</Link>
+              <Link to="/signup" className="navbar-brand p-3">Sign up</Link>
             </>
           }
         </ul>

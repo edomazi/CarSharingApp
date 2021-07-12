@@ -316,7 +316,7 @@ const Dashboard = () => {
                              className={isCard('totalRides') + 'py-3 col-lg-4 col-md-12 border-right'}
                              style={{cursor: 'pointer'}}>
                           <div className='d-flex align-items-center justify-content-center'>
-                            <h4>Total Rides:</h4>
+                            <h4>Completed Rides:</h4>
                           </div>
                           <p className='d-flex align-items-center justify-content-center h5 mt-2'>{numberTotalTrips}</p>
                         </div>
@@ -351,7 +351,7 @@ const Dashboard = () => {
                 </h4>
                 { tripBookedSuccessfully ?
                   <div className="alert alert-success text-center" role="alert">
-                    Your tip has been successfully been booked!
+                    Your trip has been successfully been booked!
                   </div> : ''
                 }
                 { tripDeleted ?

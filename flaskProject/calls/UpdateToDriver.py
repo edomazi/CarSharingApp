@@ -15,7 +15,7 @@ class UpdateToDriver(Resource):
             identity_from_token = get_jwt_identity()
             con.execute_insert_query(UpdateUserToDriver, (identity_from_token['id'],))
 
-            return jsonify(ok=1, message='Congratz you can now offer rides')
+            return jsonify(ok=1, message='Congratulations you can now offer rides!')
 
         except:
             return jsonify(ok=0, message='Something when wrong with driver')

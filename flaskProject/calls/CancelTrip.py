@@ -17,11 +17,12 @@ class CancelTrip(Resource):
 
         try:
             con = DBConnection()
+            emails = con.execute_query_params(SelectUsersFromCanceledTrip, (trip_id,))
+
             con.execute_insert_query(DeleteBookedTripWhenDeleteTrip, (trip_id,))
             con.execute_insert_query(DeleteTrip, (trip_id,))
 
             driver_name = con.execute_query_params(GetDriverName, (identity_from_token['id'],))
-            emails = con.execute_query_params(SelectUsersFromCanceledTrip, (trip_id,))
             list_of_emails = []
             if len(emails):
                 for email in emails:

@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import NavBar from "./NavBar";
 import axios from "axios";
 import {UIStore} from "../../store/store";
 import Loading from "./Loading";
-import Modal from "./Modal";
 import ReactStars from "react-rating-stars-component/dist/react-stars";
 
 
@@ -273,7 +272,14 @@ const Homepage = () => {
                                 <div className='d-flex align-items-center mt-n2 mb-1'>
                                   Rating
                                     <span className='ml-2'>
-                                      <ReactStars {...reactStarsConfig} />
+                                      <ReactStars key={driverInfos.fullName}
+                                                  size={20}
+                                                  edit={false}
+                                                  count={5}
+                                                  isHalf={true}
+                                                  value={driverInfos.stars}
+                                                  color={"black"}
+                                                  activeColor={driverInfos.stars > 3 ? 'lime' : 'red'}/>
                                     </span>
                                 </div>
                                 {driverInfos.reviews.length ?

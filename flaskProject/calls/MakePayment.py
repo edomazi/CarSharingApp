@@ -19,7 +19,7 @@ class MakePayment(Resource):
 
             con.execute_insert_query(DoPayment, (trip_id, identity_from_token['id']))
 
-            return jsonify(ok=1, message='Congrats! Trip has been paid')
+            return jsonify(ok=1, message='Congratulations! Trip has been paid')
 
         except:
             return jsonify(ok=0, message='Something when wrong, please try again')
